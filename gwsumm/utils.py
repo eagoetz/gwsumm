@@ -523,8 +523,14 @@ def add_condor_options(sharedopts_):
         '--universe',
         type=str,
         default='container',
-        choices=['container', 'local'],
+        choices=['container'],
         help="Universe for condor jobs, default: %(default)s",
+    )
+    htcopts.add_argument(
+        '--run-local',
+        action='store_true',
+        help="Run the condor jobs directly on the access point machine "
+             "in order to use the home filesystem"
     )
     htcopts.add_argument(
         '-l',

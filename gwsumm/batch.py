@@ -257,7 +257,14 @@ def main(args=None):
     jobs = []
     # Define an HTML only job which runs in the local universe.
     # This is always just one job, based on the structure we've defined.
+    # python_executable = shutil.which('python3')
     if args.html_only or not args.no_html:
+        """htmljob = GWSummaryJob(
+            'container', executable=python_executable,
+            subdir=outdir, logdir=logdir,
+            tag=f'{args.file_tag}_local', **condorcmds,
+            getenv=envvars,
+        )"""
         htmljob = GWSummaryJob(
             'local', executable='/usr/bin/apptainer',
             subdir=outdir, logdir=logdir,
@@ -271,6 +278,7 @@ def main(args=None):
     if not args.html_only or args.no_html:
         # HTCondor file transfer commands
         transfer_aux_files = []
+        # if not args.run_local:
         if args.universe != 'local':
             # set executable
             executable = shutil.which('python3')
@@ -279,6 +287,7 @@ def main(args=None):
                 'transfer_executable': 'false',
                 'should_transfer_files': 'YES',
                 'requirements': 'HAS_SINGULARITY && SINGULARITY_CAN_USE_SIF',
+                # 'requirements': 'HAS_SINGULARITY && SINGULARITY_CAN_USE_SIF && TARGET.IS_SPECIAL_DETCHAR_MACHINE'
                 'transfer_input_files': '$(inputfiles)',
                 'transfer_output_files': outpath,
                 'container_image': args.container_path
